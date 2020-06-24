@@ -1,9 +1,10 @@
-import {Router} from 'express';
-import {uuid} from 'uuidv4';
+import { Router } from "express";
 
-import appointmentRoute from './appointment.routes'
+import appointmentRoute from "./appointment.routes";
+import usersRoute from "./users.routes";
 
 const routes = Router();
-routes.use('/appointments', appointmentRoute)
+routes.use("/appointments", appointmentRoute);
+routes.use("/users", usersRoute);
 
 export default routes;

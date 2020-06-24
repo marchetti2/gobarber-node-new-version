@@ -1,51 +1,32 @@
 import { Router } from "express";
+import { getCustomRepository } from "typeorm";
+import { parseISO } from "date-fns";
 
 import Appointment from "../models/Appointments";
 import AppointmentRepository from "../repositories/AppointmentsRepository";
 import CreateAppointmentService from "../services/CreateAppointmentService";
-import UpdateAppointmentService from "../services/UpdateAppointmentService";
 
 const appointmentRoute = Router();
-const appointmentRepository = new AppointmentRepository();
-const createAppointmentService = new CreateAppointmentService(
-  appointmentRepository
-);
-const updateAppointmentService = new UpdateAppointmentService(
-  appointmentRepository
-);
+const createAppointmentService = new CreateAppointmentService();
 
-appointmentRoute.get("/", (_, response) => {
-  const appointments = appointmentRepository.all();
+appointmentRoute.get("/", async (_, response) => {
+  const appointmentRepository = getCustomRepository(AppointmentRepository);
+  const appointments = await appointmentRepository.find();
   return response.json(appointments);
 });
 
-appointmentRoute.post("/", (request, response) => {
-  const { name, email }: Appointment = request.body;
-  const appointment = createAppointmentService.execute({ name, email });
-  return response.json(appointment);
-});
-
-appointmentRoute.put("/:id", (request, response) => {
+appointmentRoute.post("/", async (request, response) => {
+  const { provider_id, date } = request.body;
   try {
-    const { id } = request.params;
-    const { name, email }: Appointment = request.body;
-
-    const find = updateAppointmentService.execute({ id, name, email });
-    return response.json(find);
+    const parseDate = parseISO(date);
+    const appointment = await createAppointmentService.execute({
+      provider_id,
+      date: parseDate,
+    });
+    return response.json(appointment);
   } catch (err) {
-    return response.status(400).json({ error: err.message });
+    return response.json({ error: err.message });
   }
-});
-
-appointmentRoute.delete("/:id", (request, response) => {
-  const { id } = request.params;
-
-  const del = appointmentRepository.delete(id);
-
-  if (del) {
-    return response.json(del);
-  }
-  return response.status(400).json({ error: "user not found" });
 });
 
 export default appointmentRoute;

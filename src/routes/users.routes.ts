@@ -1,15 +1,11 @@
-import { Router, request, response } from "express";
+import { Router } from "express";
 import { getRepository } from "typeorm";
-import multer from "multer";
 
-import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 import User from "../models/Users";
 import CreateUserService from "../services/CreateUserService";
-import UpdateUserAvatarService from "../services/UpdateUserAvatarService";
-import uploadConfig from "../config/upload";
 
 const usersRoute = Router();
-const upload = multer(uploadConfig);
+const createAppointmentService = new CreateUserService();
 
 usersRoute.get("/", async (_, response) => {
   const appointmentRepository = getRepository(User);
@@ -19,7 +15,6 @@ usersRoute.get("/", async (_, response) => {
 
 usersRoute.post("/", async (request, response) => {
   try {
-    const createAppointmentService = new CreateUserService();
     const { name, email, password }: User = request.body;
     const user = await createAppointmentService.execute({
       name,
@@ -34,27 +29,5 @@ usersRoute.post("/", async (request, response) => {
     return response.json({ error: err.message });
   }
 });
-
-usersRoute.patch(
-  "/avatar",
-  ensureAuthenticated,
-  upload.single("avatar"),
-  async (request, response) => {
-    try {
-      const updateUserAvatarService = new UpdateUserAvatarService();
-
-      const user = await updateUserAvatarService.execute({
-        user_id: request.user.id,
-        avatarFilename: request.file.filename,
-      });
-
-      delete user.password;
-
-      return response.json(user);
-    } catch (err) {
-      return response.json({ error: err.message });
-    }
-  }
-);
 
 export default usersRoute;

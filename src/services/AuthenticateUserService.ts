@@ -2,6 +2,7 @@ import { getRepository } from "typeorm";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 
+import AppError from "../errors/AppError";
 import User from "../models/Users";
 import auth from "../config/auth";
 
@@ -19,14 +20,14 @@ class AuthenticateUserService {
     const userRepository = getRepository(User);
 
     const user = await userRepository.findOne({
-      where: { email: email },
+      where: { email },
     });
     if (!user) {
-      throw new Error("User/Password incorrect");
+      throw new AppError("User/Password incorrect", 401);
     }
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("User/Password incorrect");
+      throw new AppError("User/Password incorrect", 401);
     }
 
     const { secret, expiresIn } = auth.jwt;

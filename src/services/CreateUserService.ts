@@ -2,6 +2,7 @@ import { getRepository } from "typeorm";
 import { hash } from "bcrypt";
 
 import User from "../models/Users";
+import AppError from "../errors/AppError";
 
 interface request {
   name: string;
@@ -9,19 +10,27 @@ interface request {
   password: string;
 }
 
-class CreateAppointmentService {
+class CreateUserService {
   public async execute({ name, email, password }: request): Promise<User> {
-    const appointmentRepository = getRepository(User);
+    const usersRepository = getRepository(User);
+
+    const checkUsersExists = await usersRepository.findOne({
+      where: { email },
+    });
+
+    if (checkUsersExists) {
+      throw new AppError("email already used.");
+    }
 
     const hashedPassword = await hash(password, 8);
-    const appointment = appointmentRepository.create({
+    const user = usersRepository.create({
       name,
       email,
       password: hashedPassword,
     });
-    await appointmentRepository.save(appointment);
-    return appointment;
+    await usersRepository.save(user);
+    return user;
   }
 }
 
-export default CreateAppointmentService;
+export default CreateUserService;

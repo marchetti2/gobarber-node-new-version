@@ -7,29 +7,23 @@ import CreateAppointmentService from "../services/CreateAppointmentService";
 import ensureAutheticated from "../middlewares/ensureAuthenticated";
 
 const appointmentRoute = Router();
-const createAppointmentService = new CreateAppointmentService();
-
 appointmentRoute.use(ensureAutheticated);
 
 appointmentRoute.get("/", async (request, response) => {
   const appointmentRepository = getCustomRepository(AppointmentRepository);
   const appointments = await appointmentRepository.find();
-  console.log(request.user);
   return response.json(appointments);
 });
 
 appointmentRoute.post("/", async (request, response) => {
-  try {
-    const { provider_id, date } = request.body;
-    const parseDate = parseISO(date);
-    const appointment = await createAppointmentService.execute({
-      provider_id,
-      date: parseDate,
-    });
-    return response.json(appointment);
-  } catch (err) {
-    return response.json({ error: err.message });
-  }
+  const { provider_id, date } = request.body;
+  const parseDate = parseISO(date);
+  const createAppointmentService = new CreateAppointmentService();
+  const appointment = await createAppointmentService.execute({
+    provider_id,
+    date: parseDate,
+  });
+  return response.json(appointment);
 });
 
 export default appointmentRoute;

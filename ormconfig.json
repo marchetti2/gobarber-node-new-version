@@ -6,9 +6,12 @@
   "password": "docker",
   "database": "postgres",
   "entities": ["./src/models/*.ts"],
-  "migrations": ["./src/database/migrations/*.ts"],
+  "migrations": ["./src/shared/infra/typeorm/migrations/*.ts"],
   "cli": {
-    "entitiesDir": "./src/models",
-    "migrationsDir": "./src/database/migrations"
+    "entitiesDir": [
+      "./src/modules/users/typeorm/entities",
+      "./src/modules/appointments/typeorm/entities"
+    ],
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
   }
 }

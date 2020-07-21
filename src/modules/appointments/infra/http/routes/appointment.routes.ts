@@ -3,10 +3,10 @@ import { Router } from 'express';
 import AppointmentsController from '@modules/appointments/infra/http/controllers/AppointmentsController';
 import ensureAutheticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
-const appointmentRoute = Router();
+const appointmentRouter = Router();
 const appointmentsController = new AppointmentsController();
 
-appointmentRoute.use(ensureAutheticated);
+appointmentRouter.use(ensureAutheticated);
 
 // appointmentRoute.get('/', async (request, response) => {
 
@@ -14,6 +14,6 @@ appointmentRoute.use(ensureAutheticated);
 //   return response.json(appointments);
 // });
 
-appointmentRoute.post('/', appointmentsController.create);
+appointmentRouter.post('/', appointmentsController.create);
 
-export default appointmentRoute;
+export default appointmentRouter;

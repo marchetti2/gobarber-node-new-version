@@ -1,15 +1,15 @@
-import IUserTokenRepository from '@modules/users/repository/IUserTokenRepository';
-import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
-import UserToken from '@modules/users/infra/typeorm/entities/UserToken';
 import { uuid } from 'uuidv4';
+import IUserTokensRepository from '@modules/users/repository/IUserTokenRepository';
 
-class FakeUserTokenRepository implements IUserTokenRepository {
-  private usersTokens: UserToken[] = [];
+import UserToken from '@modules/users/infra/typeorm/entities/UserToken';
+
+class FakeUserTokenRepository implements IUserTokensRepository {
+  private userTokens: UserToken[] = [];
 
   public async generate(user_id: string): Promise<UserToken> {
-    const usersToken = new UserToken();
+    const userToken = new UserToken();
 
-    Object.assign(usersToken, {
+    Object.assign(userToken, {
       id: uuid(),
       token: uuid(),
       user_id,
@@ -17,13 +17,13 @@ class FakeUserTokenRepository implements IUserTokenRepository {
       updated_at: new Date(),
     });
 
-    this.usersTokens.push(usersToken);
+    this.userTokens.push(userToken);
 
-    return usersToken;
+    return userToken;
   }
 
   public async findByToken(token: string): Promise<UserToken | undefined> {
-    const userToken = this.usersTokens.find(
+    const userToken = this.userTokens.find(
       findToken => findToken.token === token,
     );
 

@@ -1,7 +1,7 @@
 import { getRepository, Repository, Not } from 'typeorm';
 
 import IUsersRepository from '@modules/users/repository/IUsersRepository';
-import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import ICraeteUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IFindAllProvidersDTO from '@modules/users/dtos/IFindAllProvidersDTO';
 
 import User from '@modules/users/infra/typeorm/entities/Users';
@@ -14,7 +14,7 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    const user = this.ormRepository.findOne(id);
+    const user = await this.ormRepository.findOne(id);
 
     return user;
   }
@@ -39,6 +39,7 @@ class UsersRepository implements IUsersRepository {
     } else {
       users = await this.ormRepository.find();
     }
+
     return users;
   }
 
@@ -46,12 +47,8 @@ class UsersRepository implements IUsersRepository {
     name,
     email,
     password,
-  }: ICreateUserDTO): Promise<User> {
-    const user = this.ormRepository.create({
-      name,
-      email,
-      password,
-    });
+  }: ICraeteUserDTO): Promise<User> {
+    const user = this.ormRepository.create({ name, email, password });
 
     await this.ormRepository.save(user);
 

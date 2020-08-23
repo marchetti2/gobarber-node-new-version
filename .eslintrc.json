@@ -33,12 +33,17 @@
     ],
     "no-console": "off" /*["error", { "allow": ["tron"] }]*/,
     //"no-unused-vars": "off",
+    "@typescript-eslint/camelcase": "off",
     "camelcase": "off", //["error", { "properties": "never" }],
     "@typescript-eslint/no-unused-vars": "off",
     "no-param-reassign": "off",
     "class-methods-use-this": "off",
     "no-unused-expressions": "off",
-    "no-useless-constructor": "off"
+    "no-useless-constructor": "off",
+    "@typescript-eslint/interface-name-prefix": [
+      "error",
+      { "prefixWithI": "always" }
+    ]
   },
   "settings": {
     "import/resolver": {

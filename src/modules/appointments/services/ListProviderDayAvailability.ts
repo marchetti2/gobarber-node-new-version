@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
+import { getHours, isAfter } from 'date-fns';
 
 import IAppointmentsRepository from '@modules/appointments/repository/IAppointmentsRepository';
-import { getHours, isAfter } from 'date-fns';
 
 interface IRequest {
   provider_id: string;
@@ -16,7 +16,7 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-export default class ListProvidersDayAvailabilityService {
+class ListProviderDayAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -24,21 +24,20 @@ export default class ListProvidersDayAvailabilityService {
 
   public async execute({
     provider_id,
-    year,
     day,
     month,
+    year,
   }: IRequest): Promise<IResponse> {
     const appointments = await this.appointmentsRepository.findAllInDayFromProvider(
       {
+        provider_id,
         day,
         month,
-        provider_id,
         year,
       },
     );
 
     const hourStart = 8;
-
     const eachHourArray = Array.from(
       { length: 10 },
       (_, index) => index + hourStart,
@@ -62,3 +61,5 @@ export default class ListProvidersDayAvailabilityService {
     return availability;
   }
 }
+
+export default ListProviderDayAvailabilityService;

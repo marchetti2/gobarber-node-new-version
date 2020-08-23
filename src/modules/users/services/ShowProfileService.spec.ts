@@ -1,12 +1,12 @@
-import FakeUsersRepository from '@modules/users/repository/fakes/FakeUsersRepository';
-import ShowProfileService from '@modules/users/services/ShowProfileService';
-import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import AppError from '@shared/errors/AppError';
+
+import FakeUsersRepository from '@modules/users/repository/fakes/FakeUsersRepository';
+import ShowProfileService from './ShowProfileService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let showProfile: ShowProfileService;
 
-describe('Show Profile', () => {
+describe('ShowProfile', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
 
@@ -15,8 +15,8 @@ describe('Show Profile', () => {
 
   it('should be able to show the profile', async () => {
     const user = await fakeUsersRepository.create({
-      name: 'mario Luiz',
-      email: 'marchetti2@gmail.com',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
       password: '123456',
     });
 
@@ -24,13 +24,14 @@ describe('Show Profile', () => {
       user_id: user.id,
     });
 
-    expect(profile.name).toBe('mario Luiz');
-    expect(profile.email).toBe('marchetti2@gmail.com');
+    expect(profile.name).toBe('John Doe');
+    expect(profile.email).toBe('johndoe@example.com');
   });
+
   it('should not be able to show the profile from non-existing user', async () => {
-    expect(
+    await expect(
       showProfile.execute({
-        user_id: 'non',
+        user_id: 'non-existing-user-id',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

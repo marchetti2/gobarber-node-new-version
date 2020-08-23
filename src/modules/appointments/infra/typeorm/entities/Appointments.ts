@@ -1,11 +1,13 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
+  PrimaryGeneratedColumn,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+
 import User from '@modules/users/infra/typeorm/entities/Users';
 
 @Entity('appointments')
@@ -27,13 +29,13 @@ class Appointment {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column('timestamptz')
+  @Column('timestamp with time zone')
   date: Date;
 
   @CreateDateColumn()
   created_at: Date;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updated_at: Date;
 }
 

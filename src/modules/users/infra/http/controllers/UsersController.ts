@@ -1,23 +1,17 @@
 import { Request, Response } from 'express';
-import CreateUserService from '@modules/users/services/CreateUserService';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
+
+import CreateUserService from '@modules/users/services/CreateUserService';
 
 export default class UsersController {
-  public async create(request: Request, response: Response): Promise<Response> {
-    try {
-      const createAppointmentService = container.resolve(CreateUserService);
-      const { name, email, password } = request.body;
-      const user = await createAppointmentService.execute({
-        name,
-        email,
-        password,
-      });
+  public async create(req: Request, res: Response): Promise<Response> {
+    const { name, email, password } = req.body;
 
-      delete user.password;
+    const createUser = container.resolve(CreateUserService);
 
-      return response.json(user);
-    } catch (err) {
-      return response.json({ error: err.message });
-    }
+    const user = await createUser.execute({ name, email, password });
+
+    return res.json(classToClass(user));
   }
 }

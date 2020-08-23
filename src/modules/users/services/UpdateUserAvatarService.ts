@@ -1,12 +1,11 @@
-import { join } from 'path';
-import upload from '@config/upload';
-import fs from 'fs';
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import User from '@modules/users/infra/typeorm/entities/Users';
+
 import IUsersRepository from '@modules/users/repository/IUsersRepository';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
+
+import User from '@modules/users/infra/typeorm/entities/Users';
 
 interface IRequest {
   user_id: string;
@@ -18,6 +17,7 @@ class UpdateUserAvatarService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
   ) {}
@@ -38,6 +38,7 @@ class UpdateUserAvatarService {
     user.avatar = fileName;
 
     await this.usersRepository.save(user);
+
     return user;
   }
 }

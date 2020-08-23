@@ -1,19 +1,27 @@
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 import AppointmentsController from '@modules/appointments/infra/http/controllers/AppointmentsController';
-import ensureAutheticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
+import ProviderAppointmentsController from '@modules/appointments/infra/http/controllers/ProviderAppointmentsController';
 
-const appointmentRouter = Router();
+import ensureAuthenticade from '@modules/users/infra/http/middlewares/ensureAuthenticated';
+
+const appointmentsRouter = Router();
 const appointmentsController = new AppointmentsController();
+const providerAppointmentsController = new ProviderAppointmentsController();
 
-appointmentRouter.use(ensureAutheticated);
+appointmentsRouter.use(ensureAuthenticade);
 
-// appointmentRoute.get('/', async (request, response) => {
+appointmentsRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      provider_id: Joi.string().uuid().required(),
+      date: Joi.date().required(),
+    },
+  }),
+  appointmentsController.craete,
+);
+appointmentsRouter.get('/me', providerAppointmentsController.index);
 
-//   const appointments = await appointmentRepository.find();
-//   return response.json(appointments);
-// });
-
-appointmentRouter.post('/', appointmentsController.create);
-
-export default appointmentRouter;
+export default appointmentsRouter;

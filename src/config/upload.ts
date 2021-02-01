@@ -43,7 +43,7 @@ export default {
   config: {
     disk: {},
     aws: {
-      bucket: 'eliasgcf-app-gobarber',
+      bucket: 'goBarber',
     },
   },
 } as IUploadConfig;

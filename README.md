@@ -10,7 +10,7 @@ With Gobarber it is possible to register and make an appointment/service with yo
 
 This repository is **only the backend** of the application, the web and mobile versions are part of the next modules.
 
-To see the **old version** of GoBarber, [click here](https://github.com/marchetti2/GoBarberNode).
+To see the **old version** of GoBarber, [click here](https://github.com/marchetti2/gobarber-node).
 
 <h2>Summary</h2>
 
@@ -73,10 +73,10 @@ Open the terminal and execute the following commands:
 
 ```bash
   # Clone the project
-  $ git clone https://github.com/marchetti2/GobarberNodeNewJourney.git
+  $ git clone https://github.com/marchetti2/gobarber-node-new-version.git
 
   # Access the folder
-  $ cd GobarberNodeNewJourney
+  $ cd gobarber-node-new-version
 
   # Install the dependencies
   $ yarn
